@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ejemplo y video control con html :D</title>
+</head>
+<body>
+    <video id="video" width="720" height="480" autoplay></video>
+    <button id="snap" class="sexyButton">Fotitoooooo :D</button>
+    <canvas id="canvas" width="720" height="480"></canvas>
+</body>
+    <script>
+        //Evento Escuchar
+        window.addEventListener("DOMContentLoaded", function() {
+            //Creador de elementos, etc.
+            var canvas = document.getElementById('canvas');
+            var context = canvas.getContext('2d');
+            var video = document.getElementById('video');
+            var mediaConfig =  { video: true };
+            var errBack = function(e) {
+            	console.log('An error has occurred!', e)
+            };
+
+          if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia(mediaConfig).then(
+                    function(stream) {
+                    video.src = window.URL.createObjectURL(stream);
+                    video.play();
+                });}
+
+            //En caso de que no se conecte nah
+            else if(navigator.getUserMedia) {
+				navigator.getUserMedia(mediaConfig, function(stream) {
+					video.src = stream;
+					video.play();
+				}, errBack);
+
+			} else if(navigator.webkitGetUserMedia) {
+				navigator.webkitGetUserMedia(mediaConfig, function(stream){
+					video.src = window.webkitURL.createObjectURL(stream);
+					video.play();
+				}, errBack);
+			} else if(navigator.mozGetUserMedia) {
+				navigator.mozGetUserMedia(mediaConfig, function(stream){
+					video.src = window.URL.createObjectURL(stream);
+					video.play();
+				}, errBack);
+			}
+			//FOTEICHON
+			document.getElementById('snap').addEventListener('click',
+				function() {
+				context.drawImage(video, 0, 0, 720, 480);
+
+				var image = canvas.toDataURL('png');
+
+				console.log(image);
+				var link = document.createElement('a');
+				link.download = 'image';
+				link.href = image;
+				link.click();
+
+
+			});
+
+		}, false);
+	</script>
+</html>
